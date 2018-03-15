@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    Search: <input type="text" id="movieTitle"><br>
+    <button onclick="displayMovie()">Search </button>
+    <div id="title"></div>
+    <div id="poster"></div>
+    <script>
+        function displayMovie() {
+            let keyword = document.getElementById("movieTitle").value;
+            let url = "http://www.omdbapi.com/?t=" + keyword + "&apikey=d9429fd1";
+            requestAsync(url) //lets go async now!
+            .then(response => render(response.json())); //response.json() grabs the json into another Promise
+        }
+
+        function render(results) {
+            results.then( movie => { //unwrap the promise and pass the json in
+            console.log(movie);
+            document.getElementById("title").innerHTML = `${movie.Title}"`;
+            document.getElementById("poster").innerHTML = `<img src="${movie.Poster}" alt=${movie.Title}>`;
+            });
+        }
+
+        function requestAsync(url) {
+            return fetch(url)
+                .catch((error) => console.log('Woah, thats a big, fat HTTP ERROR', error)) //just in case
+        }
+    </script>
+</body>
+
+</html>

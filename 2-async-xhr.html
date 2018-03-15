@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    Search: <input type="text" id="movieTitle"><br>
+    <button onclick="displayMovie()">Search </button>
+    <div id="title"></div>
+    <div id="poster"></div>
+    <script>
+        function displayMovie() {
+            let keyword = document.getElementById("movieTitle").value;
+            let url = "http://www.omdbapi.com/?t=" + keyword + "&apikey=d9429fd1";
+            let json = requestAsync(url);
+            //let results = JSON.parse(json);
+            //document.getElementById("title").innerHTML = `${results.Title}"`;
+            //document.getElementById("poster").innerHTML = `<img src="${results.Poster}" alt=${results.Title}>`;
+        }
+
+        function request(url) {
+            let r = new XMLHttpRequest();
+            r.onreadystatechange = () => {
+                if (r.readyState == 4 && r.status == 200) {
+                    console.log(r.responseText); //print to console just for fun
+                }
+            }
+            r.open("GET", url, false);
+            r.send();
+            return r.responseText;
+        }
+
+        function render(response) {
+            let results = JSON.parse(response);
+            document.getElementById("title").innerHTML = `${results.Title}"`;
+            document.getElementById("poster").innerHTML = `<img src="${results.Poster}" alt=${results.Title}>`;
+        }
+
+        function requestAsync(url) {
+            var r = new XMLHttpRequest();
+            r.open('GET', url);
+            r.onload = function() {
+                if (r.readyState == 4 && r.status == 200) {
+                    render(r.response);
+                } else {
+                    console.log('Woah, thats a big, fat HTTP ERROR', r.statusText);
+                }
+            };
+            r.onerror = function() {
+                console.log('Something wrong with the tubes...');
+            };
+            r.send();
+        }
+    </script>
+</body>
+
+</html>
